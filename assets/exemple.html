@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CG Guide — Campina Grande</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e0d0b;
+    --surface: #161410;
+    --surface2: #1e1b17;
+    --border: #2a2520;
+    --text: #f0ebe3;
+    --text-muted: #7a7060;
+    --text-dim: #4a4438;
+    --accent: #e8a020;
+    --accent2: #d45f2a;
+    --accent3: #4fc08d;
+    --up: #4fc08d;
+    --down: #d45f2a;
+    --tag-amigos: #e8a020;
+    --tag-casal: #c96fa0;
+    --tag-solo: #5b9cf6;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* NOISE TEXTURE */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+  }
+
+  /* NAV */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(14,13,11,0.92);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+  }
+
+  .logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    letter-spacing: 0.08em;
+    color: var(--text);
+  }
+
+  .logo span { color: var(--accent); }
+
+  nav .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  nav .nav-links a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  nav .nav-links a:hover,
+  nav .nav-links a.active { color: var(--accent); }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    padding: 5rem 2rem 4rem;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  .hero-glow {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(232,160,32,0.12) 0%, transparent 70%);
+    top: -200px;
+    left: 50%;
+    transform: translateX(-50%);
+    pointer-events: none;
+  }
+
+  .hero-tag {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid rgba(232,160,32,0.3);
+    padding: 0.3rem 1rem;
+    border-radius: 100px;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3.5rem, 8vw, 6rem);
+    line-height: 0.95;
+    letter-spacing: 0.03em;
+    margin-bottom: 1rem;
+    color: var(--text);
+  }
+
+  .hero h1 em {
+    font-style: normal;
+    color: var(--accent);
+  }
+
+  .hero p {
+    max-width: 520px;
+    margin: 0 auto 2.5rem;
+    color: var(--text-muted);
+    font-size: 1rem;
+    font-weight: 300;
+  }
+
+  /* FILTER BAR */
+  .filter-section {
+    position: sticky;
+    top: 60px;
+    z-index: 90;
+    background: rgba(14,13,11,0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0.875rem 2rem;
+  }
+
+  .filter-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .filter-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-dim);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .filter-group {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+  }
+
+  .filter-divider {
+    width: 1px;
+    height: 24px;
+    background: var(--border);
+    flex-shrink: 0;
+  }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.9rem;
+    border-radius: 100px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.18s ease;
+    white-space: nowrap;
+  }
+
+  .pill:hover { border-color: var(--text-dim); color: var(--text); }
+
+  .pill.active-amigos { background: rgba(232,160,32,0.12); border-color: var(--tag-amigos); color: var(--tag-amigos); }
+  .pill.active-casal  { background: rgba(201,111,160,0.12); border-color: var(--tag-casal);  color: var(--tag-casal);  }
+  .pill.active-solo   { background: rgba(91,156,246,0.12);  border-color: var(--tag-solo);   color: var(--tag-solo);   }
+  .pill.active-cat    { background: rgba(240,235,227,0.08); border-color: rgba(240,235,227,0.3); color: var(--text); }
+
+  .pill .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* MAIN LAYOUT */
+  .main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2.5rem 2rem 6rem;
+  }
+
+  /* SECTION HEADER */
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+
+  .section-count {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    font-weight: 400;
+  }
+
+  /* CARDS GRID */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 4rem;
+  }
+
+  .card {
+    background: var(--surface);
+    padding: 1.25rem 1.5rem;
+    transition: background 0.18s;
+    animation: fadeUp 0.4s ease both;
+    position: relative;
+  }
+
+  .card:hover { background: var(--surface2); }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .card-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--text);
+  }
+
+  .card-score {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.15rem;
+    flex-shrink: 0;
+  }
+
+  .score-value {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.5rem;
+    line-height: 1;
+    color: var(--accent);
+  }
+
+  .score-label {
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+  }
+
+  .card-desc {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-weight: 300;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+  }
+
+  .card-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+  }
+
+  .tag {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+  }
+
+  .tag-cat {
+    background: rgba(240,235,227,0.06);
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+  }
+
+  .tag-amigos { background: rgba(232,160,32,0.12); color: var(--tag-amigos); }
+  .tag-casal  { background: rgba(201,111,160,0.12); color: var(--tag-casal); }
+  .tag-solo   { background: rgba(91,156,246,0.12);  color: var(--tag-solo);  }
+
+  .card-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .vote-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.3rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    border: 1px solid var(--border);
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.18s;
+  }
+
+  .vote-up   { color: var(--up);   }
+  .vote-down { color: var(--down); }
+
+  .vote-up:hover   { background: rgba(79,192,141,0.1);  border-color: var(--up);   }
+  .vote-down:hover { background: rgba(212,95,42,0.1);   border-color: var(--down); }
+
+  .vote-up.voted   { background: rgba(79,192,141,0.15); border-color: var(--up);   }
+  .vote-down.voted { background: rgba(212,95,42,0.15);  border-color: var(--down); }
+
+  .card-address {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+
+  /* ROTEIROS */
+  .roteiros-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .roteiro-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: border-color 0.2s, transform 0.2s;
+    cursor: pointer;
+    animation: fadeUp 0.4s ease both;
+  }
+
+  .roteiro-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+
+  .roteiro-header {
+    padding: 1.5rem 1.5rem 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .roteiro-tipo {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+
+  .roteiro-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 800;
+    line-height: 1.25;
+    margin-bottom: 0.4rem;
+  }
+
+  .roteiro-desc {
+    font-size: 0.83rem;
+    color: var(--text-muted);
+    font-weight: 300;
+  }
+
+  .roteiro-stops {
+    padding: 1rem 1.5rem 1.5rem;
+  }
+
+  .roteiro-stop {
+    display: flex;
+    gap: 0.75rem;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid rgba(42,37,32,0.5);
+  }
+
+  .roteiro-stop:last-child { border-bottom: none; }
+
+  .stop-time {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--text-dim);
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+    min-width: 48px;
+    padding-top: 1px;
+  }
+
+  .stop-info {}
+
+  .stop-name {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 0.1rem;
+  }
+
+  .stop-type {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 300;
+  }
+
+  .stop-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--border);
+    flex-shrink: 0;
+    margin-top: 5px;
+  }
+
+  .stop-dot.eat    { background: var(--accent); }
+  .stop-dot.park   { background: var(--accent3); }
+  .stop-dot.bar    { background: var(--accent2); }
+
+  /* EMPTY STATE */
+  .empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--text-dim);
+    grid-column: 1/-1;
+    background: var(--surface);
+  }
+
+  .empty-state p { font-size: 0.9rem; }
+
+  /* SUGGEST BANNER */
+  .suggest-banner {
+    background: linear-gradient(135deg, var(--surface2) 0%, rgba(232,160,32,0.05) 100%);
+    border: 1px solid rgba(232,160,32,0.2);
+    border-radius: var(--radius);
+    padding: 2rem;
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+
+  .suggest-banner h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+  }
+
+  .suggest-banner p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+  }
+
+  .btn-suggest {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.55rem 1.4rem;
+    background: var(--accent);
+    color: #0e0d0b;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.03em;
+    transition: opacity 0.18s;
+  }
+
+  .btn-suggest:hover { opacity: 0.88; }
+
+  /* MODAL */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    backdrop-filter: blur(6px);
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+  }
+
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    width: 100%;
+    max-width: 480px;
+    padding: 2rem;
+    transform: translateY(16px);
+    transition: transform 0.25s ease;
+  }
+
+  .modal-overlay.open .modal { transform: translateY(0); }
+
+  .modal h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 800;
+    margin-bottom: 0.4rem;
+  }
+
+  .modal p { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem; }
+
+  .form-group { margin-bottom: 1rem; }
+
+  .form-group label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: 0.4rem;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    padding: 0.6rem 0.9rem;
+    font-size: 0.88rem;
+    font-family: 'DM Sans', sans-serif;
+    outline: none;
+    transition: border-color 0.18s;
+  }
+
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus { border-color: var(--accent); }
+
+  .form-group textarea { resize: vertical; min-height: 80px; }
+
+  .form-group select option { background: #1e1b17; }
+
+  .modal-actions { display: flex; gap: 0.75rem; margin-top: 1.5rem; }
+
+  .btn-cancel {
+    flex: 1;
+    padding: 0.6rem;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 0.88rem;
+    transition: border-color 0.18s;
+  }
+
+  .btn-cancel:hover { border-color: var(--text-muted); }
+
+  .btn-submit {
+    flex: 2;
+    padding: 0.6rem;
+    background: var(--accent);
+    border: none;
+    border-radius: 8px;
+    color: #0e0d0b;
+    font-weight: 700;
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: opacity 0.18s;
+  }
+
+  .btn-submit:hover { opacity: 0.88; }
+
+  .toast {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 0.6rem 1.5rem;
+    font-size: 0.85rem;
+    color: var(--text);
+    z-index: 300;
+    opacity: 0;
+    transition: all 0.3s;
+    white-space: nowrap;
+  }
+
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">CG<span>Guide</span></div>
+  <ul class="nav-links">
+    <li><a href="#lugares" class="active" onclick="setSection('lugares', this)">Lugares</a></li>
+    <li><a href="#roteiros" onclick="setSection('roteiros', this)">Roteiros</a></li>
+  </ul>
+</nav>
+
+<!-- FILTER BAR -->
+<div class="filter-section">
+  <div class="filter-inner">
+    <span class="filter-label">Perfil</span>
+    <div class="filter-group" id="filter-perfil">
+      <button class="pill" data-perfil="amigos" onclick="togglePerfil('amigos', this)">
+        <span class="dot" style="background:var(--tag-amigos)"></span> Amigos
+      </button>
+      <button class="pill" data-perfil="casal" onclick="togglePerfil('casal', this)">
+        <span class="dot" style="background:var(--tag-casal)"></span> Casal
+      </button>
+      <button class="pill" data-perfil="solo" onclick="togglePerfil('solo', this)">
+        <span class="dot" style="background:var(--tag-solo)"></span> Solo
+      </button>
+    </div>
+    <div class="filter-divider" id="cat-divider"></div>
+    <div class="filter-group" id="filter-cat">
+      <button class="pill" data-cat="restaurante" onclick="toggleCat('restaurante', this)">🍽 Restaurante</button>
+      <button class="pill" data-cat="bar" onclick="toggleCat('bar', this)">🍺 Bar</button>
+      <button class="pill" data-cat="pub" onclick="toggleCat('pub', this)">🎸 Pub</button>
+      <button class="pill" data-cat="sorveteria" onclick="toggleCat('sorveteria', this)">🍦 Sorveteria</button>
+      <button class="pill" data-cat="shopping" onclick="toggleCat('shopping', this)">🛍 Shopping</button>
+      <button class="pill" data-cat="cafeteria" onclick="toggleCat('cafeteria', this)">☕ Café</button>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- SECAO LUGARES -->
+  <div id="section-lugares">
+    <div class="section-header">
+      <span class="section-title">Onde comer & beber</span>
+      <span class="section-count" id="result-count"></span>
+    </div>
+    <div class="cards-grid" id="cards-container"></div>
+
+    <div class="suggest-banner">
+      <h3>Conhece um lugar incrível?</h3>
+      <p>Sugira um estabelecimento para aparecer no guia. Nossa equipe vai avaliar e publicar.</p>
+      <button class="btn-suggest" onclick="openModal()">+ Sugerir estabelecimento</button>
+    </div>
+  </div>
+
+  <!-- SECAO ROTEIROS -->
+  <div id="section-roteiros" style="display:none">
+    <div class="section-header">
+      <span class="section-title">Roteiros</span>
+      <span class="section-count">entretenimento + onde comer</span>
+    </div>
+    <div class="roteiros-grid" id="roteiros-container"></div>
+  </div>
+
+</div>
+
+<!-- MODAL SUGESTÃO -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <h2>Sugerir Estabelecimento</h2>
+    <p>Preencha as informações básicas. Nossa equipe irá revisar antes de publicar.</p>
+    <div class="form-group">
+      <label>Nome do lugar</label>
+      <input type="text" placeholder="Ex: Bar do Zé">
+    </div>
+    <div class="form-group">
+      <label>Categoria</label>
+      <select>
+        <option value="">Selecione...</option>
+        <option>Restaurante</option>
+        <option>Bar</option>
+        <option>Pub</option>
+        <option>Sorveteria</option>
+        <option>Cafeteria</option>
+        <option>Shopping</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Endereço</label>
+      <input type="text" placeholder="Rua, bairro...">
+    </div>
+    <div class="form-group">
+      <label>Por que indicar? (opcional)</label>
+      <textarea placeholder="Conta um pouco sobre o lugar..."></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
+      <button class="btn-submit" onclick="submitSuggestion()">Enviar sugestão</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── DATA ────────────────────────────────────────────────────────────────────
+
+const lugares = [
+  {
+    id: 1, nome: "Açaí da Nega", cat: "sorveteria",
+    desc: "O melhor açaí de Campina — tigela generosa, coberturas caprichadas e fila nos fins de semana.",
+    endereco: "Prata, CG", perfis: ["amigos", "solo"],
+    up: 142, down: 8
+  },
+  {
+    id: 2, nome: "Quintal do Forró", cat: "bar",
+    desc: "Bar animado com forró ao vivo às sextas. Petiscos nordestinos e cerveja gelada no capricho.",
+    endereco: "Bodocongó, CG", perfis: ["amigos", "casal"],
+    up: 218, down: 14
+  },
+  {
+    id: 3, nome: "Cantinho da Picanha", cat: "restaurante",
+    desc: "Rodízio de carnes com cortes nobres, buffet de saladas e sobremesas inclusas no preço.",
+    endereco: "Centro, CG", perfis: ["amigos", "casal"],
+    up: 305, down: 22
+  },
+  {
+    id: 4, nome: "The Pub CG", cat: "pub",
+    desc: "Ambiente britânico com cervejas artesanais locais, petiscos diferentões e música ao vivo.",
+    endereco: "Catolé, CG", perfis: ["amigos", "casal"],
+    up: 189, down: 11
+  },
+  {
+    id: 5, nome: "Café Mangabeira", cat: "cafeteria",
+    desc: "Café especial de origem paraibana, bolos caseiros e espaço aconchegante para trabalhar ou ler.",
+    endereco: "Mirante, CG", perfis: ["solo", "casal"],
+    up: 97, down: 4
+  },
+  {
+    id: 6, nome: "Tapiocaria da Véia", cat: "restaurante",
+    desc: "Tapiocas recheadas na hora com ingredientes locais. Clássico e barato, sem frescura.",
+    endereco: "Prata, CG", perfis: ["solo", "amigos"],
+    up: 256, down: 18
+  },
+  {
+    id: 7, nome: "Sorveteria Gelato CG", cat: "sorveteria",
+    desc: "Gelatos artesanais com sabores regionais: cajá, umbú, tamarindo. Vale cada centavo.",
+    endereco: "Bodocongó, CG", perfis: ["casal", "solo", "amigos"],
+    up: 174, down: 6
+  },
+  {
+    id: 8, nome: "Empório do Bode", cat: "restaurante",
+    desc: "Casa especializada em bode assado, buchada e outras iguarias nordestinas. Reserva recomendada.",
+    endereco: "Centro, CG", perfis: ["amigos", "casal"],
+    up: 341, down: 29
+  },
+  {
+    id: 9, nome: "Rock Station Bar", cat: "pub",
+    desc: "Pub voltado para o rock nacional e clássico. Decoração retrô, chopp barato e petiscos caprichados.",
+    endereco: "Dinamérica, CG", perfis: ["amigos"],
+    up: 128, down: 16
+  },
+  {
+    id: 10, nome: "Loja Caruaru Store", cat: "shopping",
+    desc: "Moda regional e artesanato paraibano no Partage Shopping. Lembranças e peças únicas.",
+    endereco: "Partage Shopping, CG", perfis: ["casal", "solo"],
+    up: 63, down: 5
+  },
+  {
+    id: 11, nome: "Bar do Caldinho", cat: "bar",
+    desc: "Caldinhos variados, tira-gostos e ambiente descontraído. Ótimo para encerrar a noite.",
+    endereco: "Liberdade, CG", perfis: ["amigos", "solo"],
+    up: 155, down: 20
+  },
+  {
+    id: 12, nome: "Blend Coffee", cat: "cafeteria",
+    desc: "Terceira onda em Campina: métodos filtrados, espresso de qualidade e WiFi excelente.",
+    endereco: "Catolé, CG", perfis: ["solo", "casal"],
+    up: 88, down: 3
+  },
+];
+
+const roteiros = [
+  {
+    id: 1,
+    tipo: "amigos",
+    titulo: "Tarde e Noite com a Galera",
+    desc: "Comece no parque, pegue um sorvete e encerre com forró. Roteiro clássico de Campina.",
+    paradas: [
+      { hora: "15:00", nome: "Açude Velho", tipo: "Parque / lazer", dot: "park" },
+      { hora: "17:00", nome: "Açaí da Nega", tipo: "Sorveteria — lanche da tarde", dot: "eat" },
+      { hora: "19:30", nome: "Tapiocaria da Véia", tipo: "Restaurante — jantar leve", dot: "eat" },
+      { hora: "22:00", nome: "Quintal do Forró", tipo: "Bar — forró ao vivo", dot: "bar" },
+    ]
+  },
+  {
+    id: 2,
+    tipo: "casal",
+    titulo: "Passeio Romântico",
+    desc: "Um dia tranquilo pelo centro histórico com paradas deliciosas para dois.",
+    paradas: [
+      { hora: "10:00", nome: "Museu do Algodão", tipo: "Cultura / museu", dot: "park" },
+      { hora: "12:00", nome: "Cantinho da Picanha", tipo: "Restaurante — almoço especial", dot: "eat" },
+      { hora: "15:30", nome: "Café Mangabeira", tipo: "Cafeteria — pausa a dois", dot: "eat" },
+      { hora: "18:00", nome: "Açude Novo", tipo: "Parque / pôr do sol", dot: "park" },
+      { hora: "20:30", nome: "The Pub CG", tipo: "Pub — cerveja artesanal", dot: "bar" },
+    ]
+  },
+  {
+    id: 3,
+    tipo: "solo",
+    titulo: "Dia para Si Mesmo",
+    desc: "Explore a cidade no seu ritmo — café, cultura e um canto tranquilo para relaxar.",
+    paradas: [
+      { hora: "09:00", nome: "Blend Coffee", tipo: "Cafeteria — começo do dia", dot: "eat" },
+      { hora: "11:00", nome: "Biblioteca Municipal", tipo: "Cultura / leitura", dot: "park" },
+      { hora: "13:00", nome: "Tapiocaria da Véia", tipo: "Restaurante — almoço rápido", dot: "eat" },
+      { hora: "15:00", nome: "Parque do Povo", tipo: "Parque / caminhada", dot: "park" },
+      { hora: "17:30", nome: "Sorveteria Gelato CG", tipo: "Sorveteria — pausa merecida", dot: "eat" },
+    ]
+  },
+  {
+    id: 4,
+    tipo: "amigos",
+    titulo: "Sexta dos Amigos",
+    desc: "Happy hour que vira noite. Do petisco ao show, tudo no mesmo bairro.",
+    paradas: [
+      { hora: "18:00", nome: "Empório do Bode", tipo: "Restaurante — jantar em grupo", dot: "eat" },
+      { hora: "20:30", nome: "Rock Station Bar", tipo: "Pub — rock ao vivo", dot: "bar" },
+      { hora: "23:00", nome: "Bar do Caldinho", tipo: "Bar — encerramento", dot: "bar" },
+    ]
+  },
+];
+
+// ─── STATE ───────────────────────────────────────────────────────────────────
+
+let activePerfil = null;
+let activeCat = null;
+let currentSection = 'lugares';
+const voted = {}; // { id: 'up'|'down' }
+
+// ─── RENDER ──────────────────────────────────────────────────────────────────
+
+function score(l) { return l.up - l.down; }
+
+function renderLugares() {
+  let filtered = [...lugares];
+
+  if (activePerfil) filtered = filtered.filter(l => l.perfis.includes(activePerfil));
+  if (activeCat)    filtered = filtered.filter(l => l.cat === activeCat);
+
+  filtered.sort((a, b) => score(b) - score(a));
+
+  const count = document.getElementById('result-count');
+  count.textContent = `${filtered.length} lugar${filtered.length !== 1 ? 'es' : ''}`;
+
+  const container = document.getElementById('cards-container');
+
+  if (filtered.length === 0) {
+    container.innerHTML = `<div class="empty-state"><p>Nenhum lugar encontrado com esses filtros.</p></div>`;
+    return;
+  }
+
+  container.innerHTML = filtered.map((l, i) => {
+    const s = score(l);
+    const voto = voted[l.id];
+    const perfilTags = l.perfis.map(p =>
+      `<span class="tag tag-${p}">${p}</span>`
+    ).join('');
+
+    return `
+    <div class="card" style="animation-delay:${i * 0.04}s">
+      <div class="card-top">
+        <div>
+          <div class="card-name">${l.nome}</div>
+        </div>
+        <div class="card-score">
+          <span class="score-value" id="score-${l.id}">${s}</span>
+          <span class="score-label">score</span>
+        </div>
+      </div>
+      <p class="card-desc">${l.desc}</p>
+      <div class="card-meta">
+        <span class="tag tag-cat">${l.cat}</span>
+        ${perfilTags}
+      </div>
+      <div class="card-actions">
+        <button class="vote-btn vote-up ${voto === 'up' ? 'voted' : ''}" onclick="vote(${l.id}, 'up')">
+          ▲ <span id="up-${l.id}">${l.up}</span>
+        </button>
+        <button class="vote-btn vote-down ${voto === 'down' ? 'voted' : ''}" onclick="vote(${l.id}, 'down')">
+          ▼ <span id="down-${l.id}">${l.down}</span>
+        </button>
+        <span class="card-address">📍 ${l.endereco}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderRoteiros() {
+  const container = document.getElementById('roteiros-container');
+  const filtered = activePerfil
+    ? roteiros.filter(r => r.tipo === activePerfil || r.tipo === 'all')
+    : roteiros;
+
+  container.innerHTML = filtered.map((r, i) => {
+    const cor = r.tipo === 'amigos' ? 'var(--tag-amigos)' : r.tipo === 'casal' ? 'var(--tag-casal)' : 'var(--tag-solo)';
+    const stops = r.paradas.map(p => `
+      <div class="roteiro-stop">
+        <span class="stop-time">${p.hora}</span>
+        <span class="stop-dot ${p.dot}"></span>
+        <div class="stop-info">
+          <div class="stop-name">${p.nome}</div>
+          <div class="stop-type">${p.tipo}</div>
+        </div>
+      </div>`).join('');
+
+    return `
+    <div class="roteiro-card" style="animation-delay:${i * 0.08}s">
+      <div class="roteiro-header">
+        <div class="roteiro-tipo" style="color:${cor}">▶ Para ${r.tipo}</div>
+        <div class="roteiro-title">${r.titulo}</div>
+        <div class="roteiro-desc">${r.desc}</div>
+      </div>
+      <div class="roteiro-stops">${stops}</div>
+    </div>`;
+  }).join('');
+}
+
+// ─── ACTIONS ─────────────────────────────────────────────────────────────────
+
+function togglePerfil(p, btn) {
+  const btns = document.querySelectorAll('#filter-perfil .pill');
+  if (activePerfil === p) {
+    activePerfil = null;
+    btns.forEach(b => b.className = 'pill');
+  } else {
+    activePerfil = p;
+    btns.forEach(b => b.className = 'pill');
+    btn.className = `pill active-${p}`;
+  }
+  if (currentSection === 'lugares') renderLugares();
+  else renderRoteiros();
+}
+
+function toggleCat(c, btn) {
+  const btns = document.querySelectorAll('#filter-cat .pill');
+  if (activeCat === c) {
+    activeCat = null;
+    btns.forEach(b => b.className = 'pill');
+  } else {
+    activeCat = c;
+    btns.forEach(b => b.className = 'pill');
+    btn.className = 'pill active-cat';
+  }
+  renderLugares();
+}
+
+function vote(id, tipo) {
+  const lugar = lugares.find(l => l.id === id);
+  if (!lugar) return;
+
+  const prev = voted[id];
+
+  if (prev === tipo) {
+    // desvoto
+    if (tipo === 'up') lugar.up--;
+    else lugar.down--;
+    delete voted[id];
+  } else {
+    // reverte voto anterior
+    if (prev === 'up') lugar.up--;
+    if (prev === 'down') lugar.down--;
+    // novo voto
+    if (tipo === 'up') lugar.up++;
+    else lugar.down++;
+    voted[id] = tipo;
+  }
+
+  // update UI sem re-render completo
+  document.getElementById(`up-${id}`).textContent = lugar.up;
+  document.getElementById(`down-${id}`).textContent = lugar.down;
+  document.getElementById(`score-${id}`).textContent = score(lugar);
+
+  const upBtn = document.querySelector(`button.vote-up[onclick="vote(${id}, 'up')"]`);
+  const downBtn = document.querySelector(`button.vote-down[onclick="vote(${id}, 'down')"]`);
+  if (upBtn)   upBtn.classList.toggle('voted',   voted[id] === 'up');
+  if (downBtn) downBtn.classList.toggle('voted',  voted[id] === 'down');
+
+  showToast(voted[id] ? (tipo === 'up' ? '👍 Upvote registrado!' : '👎 Downvote registrado!') : 'Voto removido');
+}
+
+function setSection(s, el) {
+  currentSection = s;
+  document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+  el.classList.add('active');
+
+  document.getElementById('section-lugares').style.display = s === 'lugares' ? '' : 'none';
+  document.getElementById('section-roteiros').style.display = s === 'roteiros' ? '' : 'none';
+
+  // Mostrar/ocultar filtro de categoria só em lugares
+  document.getElementById('cat-divider').style.display = s === 'lugares' ? '' : 'none';
+  document.getElementById('filter-cat').style.display = s === 'lugares' ? '' : 'none';
+
+  if (s === 'roteiros') renderRoteiros();
+}
+
+function openModal() {
+  document.getElementById('modal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+}
+
+function submitSuggestion() {
+  closeModal();
+  showToast('✅ Sugestão enviada! Vamos avaliar em breve.');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+document.getElementById('modal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+// ─── INIT ────────────────────────────────────────────────────────────────────
+renderLugares();
+</script>
+</body>
+</html>
